@@ -22,7 +22,8 @@ new-item app.py
 
 ```
 
-# 起動手順` python .\app.py`
+# 起動手順
+` python .\app.py`
 
 
 # ファイル構成
