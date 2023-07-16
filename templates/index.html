@@ -49,10 +49,21 @@
 
     // When the login button is clicked, send the email and password to the server
     $('#loginButton').click(function () {
+
         var email = $('#email').val();
         var password = $('#password').val();
 
-        socket.emit('login', { email: email, password: password });
+        $.ajax({
+            ur: '/login',
+            type: 'POST',
+            data: { 'email': email, 'password': password },
+            success: function (response) {
+                alert(response.message);
+            },
+            error: function (error) {
+                alert(error.responseText || error.responseJSON.message);
+            }
+        })
 
         // Clear the input fields
         $('#email').val('');

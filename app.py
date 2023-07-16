@@ -26,7 +26,7 @@ def home():
 
 @app.route('/login' , methods=['POST'])
 def login():
-    return login.handle.login()
+    return login.login()
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
@@ -34,4 +34,4 @@ def chat():
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(app)
