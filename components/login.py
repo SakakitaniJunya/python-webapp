@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, session
 import sqlite3
-import tkinter
+from database import get_db 
 
 auth = Blueprint('auth', __name__)
 
@@ -10,31 +10,38 @@ def login():
     email = request.form.get("email")
     password = request.form.get("password")
 
-
-    # con = sqlite3.connect('chat.db')
-    # cur = con.cursor()
-    # cur.execute("SELECT * FROM USERS WHERE email = ? AND password = ?", (email, password))
-    
+    con =get_db() 
+    cur = con.cursor()
+    cur.execute("SELECT * FROM USERS WHERE email = ? AND password = ?", (email, password))
+    user = cur.fetchone()
         # メッセージをレスポンスとして返す
-    response = {
-        "status": "success", 
-        "message": "Login successful."+ password
-    }
+    if user is not None:
+        # セッションに格納
+        session['user_id'] = user['user_id']
+        session['email'] = user['email']
+        session['user_name'] = user['name']
+        response = {
+            "status": "success",
+            "message": "Login Success" + email
+        }
+        return jsonify(response), 200
+    else:
+        response = {
+            "status": "failed", 
+            "message": "Login failed"+ email
+        }
+        return jsonify(response), 401
 
-    return jsonify(response)
 
 
-# @auth.route('/login', methods=["GET"])
-# def login():
-#     email = request.form.get("email")
-#     password = request.form.get("password")
+@auth.route('/register', methods=["POST"])
+def register():
+    email = request.form.get("email")
+    password = request.form.get("password")
 
-#     print(email)
-#     print(password)
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("INSERT INTO USERS (EMAIL, PASSWORD) VALUES (? , ?)", (email, password))
+    con.commit()
 
-#     # con = sqlite3.connect('chat.db')
-#     # cur = con.cursor()
-#     # cur.execute("SELECT * FROM USERS WHERE email = ? AND password = ?", (email, password))
-#     # tkinterのインポート
-#     return "Hello"
-
+    return jsonify({"status": "success", "message": "Register Success"})

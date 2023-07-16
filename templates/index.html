@@ -3,12 +3,14 @@
 
 <head>
     <title>Chat Py</title>
+    <script src="main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
         integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
         crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
     <style>
         .radio-inline__input {
             clip: rect(1px, 1px, 1px, 1px);
@@ -108,9 +110,6 @@
 </body>
 
 <script>
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-    // When the submit button is clicked, check which radio button is selected and send the appropriate request to the server
     $('#submitAction').click(function () {
         var email = $('#email').val();
         var password = $('#password').val();
@@ -123,6 +122,13 @@
             data: { 'email': email, 'password': password },
             success: function (response) {
                 alert(response.message);
+                if (action === 'login') {
+                    // If login is successful, redirect to chat page
+                    window.location.href = '/chat';
+                } else if (action === 'register') {
+                    // If registration is successful, show a success message and stay on the same page
+                    alert('Registration successful! You can now log in.');
+                }
             },
             error: function (error) {
                 alert(error.responseText || error.responseJSON.message);

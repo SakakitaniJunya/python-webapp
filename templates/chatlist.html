@@ -1,41 +1,92 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <!-- Socket.IOのJavaScriptライブラリを読み込みます。これにより、ブラウザからサーバーへのリアルタイム通信が可能になります。 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
-    <!-- jQueryのJavaScriptライブラリを読み込みます。これはHTMLの操作を簡単にするライブラリです。 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-</head>
-<body>
-    <!-- メッセージを表示するためのリストを作成します。 -->
-    <ul id="messages">
-        <!-- サーバーから受け取ったメッセージのリストを表示します。 -->
-        {% for message in messages %}
-            <!-- 各メッセージをリストの項目として表示します。 -->
-            <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    <!-- ユーザーがメッセージを入力するためのテキストボックスを作成します。 -->
-    <input id="message" type="text">
-    <!-- メッセージを送信するためのボタンを作成します。 -->
-    <button id="send">Send</button>
 
-    <script>
-        // ここからJavaScriptのコードです。
-        // Socket.IOサーバーへの接続を開始します。document.domainとlocation.portは現在のウェブページのドメインとポート番号を参照します。
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-        
-        // サーバーから'message'イベントを受け取ったときの処理を定義します。受け取ったメッセージ（data）をHTMLのメッセージリストに追加します。
-        socket.on('message', function(data) {
-            $('#messages').append($('<li>').text(data));
-        });
-        
-        // 'send'ボタンがクリックされたときの処理を定義します。テキストボックスに入力されたメッセージをサーバーに送信し、テキストボックスをクリアします。
-        $('#send').click(function() {
-            socket.emit('message', $('#message').val());
-            $('#message').val('');
-            return false;
-        });
-    </script>
+<head>
+    <title>Chat Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+
+<body class="bg-gray-200 h-screen">
+    <div class="container mx-auto h-full p-4">
+        <div id="message-container" class="overflow-y-auto mb-10 px-4 py-6" style="height: calc(100% - 3rem);">
+            <!-- Messages will be appended here dynamically -->
+        </div>
+
+        <div class="fixed bottom-0 left-0 right-0 py-2 bg-white">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="relative">
+                    <input id="message-input" type="text"
+                        class="form-control w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                        placeholder="Type your message here...">
+                    <button id="send-button"
+                        class="absolute inset-y-0 right-0 flex items-center px-4 font-bold text-white bg-indigo-500 rounded-r-lg focus:outline-none focus:shadow-outline hover:bg-indigo-600">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+<script>
+
+    function createMessageElement(user_id, message, timestamp, isCurrentUser) {
+        var alignment = isCurrentUser ? 'flex justify-end' : 'flex justify-start';
+        var bgColor = isCurrentUser ? 'bg-blue-100' : 'bg-white';
+
+        var messageElement = $('<div>').addClass(`border rounded-lg p-3 mb-2 ${alignment} ${bgColor}`).append(
+            $('<div>').addClass('w-full').append(
+                $('<strong>').text(user_id ? user_id : 'Anonymous').addClass('block text-indigo-600'),
+                $('<p>').text(message).addClass('mb-1'),
+                $('<span>').text(timestamp).addClass('text-xs text-gray-600')
+            )
+        );
+
+        return messageElement;
+    }
+
+
+    function getMessages() {
+        $.getJSON('/get_messages', function (data) {
+            $('#message-container').empty();
+
+            var userMessages = data.userMessageList;
+            var allMessages = data.allMessagesList;
+
+            allMessages.forEach(function (message) {
+                var isCurrentUser = userMessages.some(function (userMessage) {
+                    return userMessage.message_id === message.message_id;
+                });
+                var messageElement = createMessageElement(message.user_id, message.message, message.created_at, isCurrentUser);
+                $('#message-container').append(messageElement);
+            });
+        });
+    }
+
+    // Make sure to call getMessages when the page loads
+    $(document).ready(getMessages);
+
+
+    $(function () {
+        $('#send-button').click(function () {
+            var message = $('#message-input').val();
+            //var userId = getCurrentUserId();
+
+            $.ajax({
+                url: '/chat',
+                type: 'POST',
+                contentType: 'application/json', // Content-Type を 'application/json' に設定
+                data: JSON.stringify({ 'message': message }), // JSON 文字列に変換
+                success: function (response) {
+                    alert("成功")
+                },
+                error: function (error) {
+                    alert(error.responseText || error.responseJSON.message);
+
+                }
+            });
+        });
+    });
+
+</script>
+
 </html>

@@ -4,7 +4,7 @@
 from flask import Flask,Blueprint, render_template, request, jsonify, g
 from flask_socketio import SocketIO
 import sqlite3
-
+import secrets
 # flask_socketioは、Flaskと統合されたSocket.IOのライブラリで、
 # サーバとクライアント間のリアルタイム通信を可能にします。
 from flask_socketio import SocketIO, emit
@@ -12,9 +12,14 @@ from components.login import auth
 from components.chat import chat
 
 
+
+def generate_secret_key():
+    return secrets.token_hex(16)
+
 # Flaskのアプリケーションインスタンスを作成します。
 # これは、ウェブアプリケーション全体を制御する中心的なオブジェクトです。
 app = Flask(__name__)
+app.secret_key =  generate_secret_key()
 app.register_blueprint(auth)
 app.register_blueprint(chat)
 
@@ -44,6 +49,7 @@ def init_db():
         user_id INTEGER PRIMARY KEY, 
         name TEXT, 
         email TEXT UNIQUE, 
+        password TEXT,
         img TEXT, 
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
         deleted_at TIMESTAMP
@@ -66,20 +72,9 @@ def init_db():
 def home():
     return render_template('index.html')
 
-@app.route('/login' , methods=['GET'])
-def login():
-    return "<p>Hello World!</p>"
-#    return login.login()
 
-@app.route('/login' , methods=['POST'])
-def login():
-   return auth.login()
-
-@app.route('/chat', methods=['GET', 'POST'])
-def chat():
-    return chat.handle_chat()
 
 
 if __name__ == "__main__":
-    init_db()  # データベースを初期化する
-    socketio.run(app)
+    #init_db()  # データベースを初期化する
+    app.run(debug=True)
