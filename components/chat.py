@@ -9,6 +9,13 @@ def login():
     email = request.form.get("email")
     password = request.form.get("password")
 
-    con = sqlite3.connect('chat.db')
-    cur = con.cursor()
+    db = get_db()
+    cur = db.cursor()
     cur.execute("SELECT * FROM USERS WHERE email = ? AND password = ?", (email, password))
+    user = cur.fetchone()
+
+    if user is not None:
+        response = {
+            "status": "success",
+            "message": "user"
+        }
