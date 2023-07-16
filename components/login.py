@@ -10,17 +10,15 @@ def login():
     email = request.form.get("email")
     password = request.form.get("password")
 
-    print(email)
-    print(password)
+
     # con = sqlite3.connect('chat.db')
     # cur = con.cursor()
     # cur.execute("SELECT * FROM USERS WHERE email = ? AND password = ?", (email, password))
-
-
+    
         # メッセージをレスポンスとして返す
     response = {
         "status": "success", 
-        "message": "Login successful."
+        "message": "Login successful."+ password
     }
 
     return jsonify(response)

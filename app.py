@@ -24,9 +24,14 @@ socketio = SocketIO(app)
 def home():
     return render_template('index.html')
 
-@app.route('/login' , methods=['POST'])
+@app.route('/login' , methods=['GET'])
 def login():
-    return login.login()
+    return "<p>Hello World!</p>"
+#    return login.login()
+
+@app.route('/login' , methods=['POST'])
+def login1():
+   return "<p>Hello World!</p>"
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():

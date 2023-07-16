@@ -50,11 +50,28 @@
     // When the login button is clicked, send the email and password to the server
     $('#loginButton').click(function () {
 
+        //     $('#loginButton').click(function () {
+        //         $.ajax({
+        //             url: '/login',
+        //             type: 'GET',
+        //             success: function (response) {
+        //                 alert(response);
+        //             },
+        //             error: function (error) {
+        //                 console.log(error);
+        //                 alert('An error occurred');
+        //             }
+        //         });
+        //         return false;
+
+        //     });
+        // });
+
         var email = $('#email').val();
         var password = $('#password').val();
 
         $.ajax({
-            ur: '/login',
+            url: '/login',
             type: 'POST',
             data: { 'email': email, 'password': password },
             success: function (response) {
@@ -71,6 +88,8 @@
 
         return false;
     });
+
+
 </script>
 
 </html>
