@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Socket.IOのJavaScriptライブラリを読み込みます。これにより、ブラウザからサーバーへのリアルタイム通信が可能になります。 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+    <!-- jQueryのJavaScriptライブラリを読み込みます。これはHTMLの操作を簡単にするライブラリです。 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- メッセージを表示するためのリストを作成します。 -->
+    <ul id="messages">
+        <!-- サーバーから受け取ったメッセージのリストを表示します。 -->
+        {% for message in messages %}
+            <!-- 各メッセージをリストの項目として表示します。 -->
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <!-- ユーザーがメッセージを入力するためのテキストボックスを作成します。 -->
+    <input id="message" type="text">
+    <!-- メッセージを送信するためのボタンを作成します。 -->
+    <button id="send">Send</button>
+
+    <script>
+        // ここからJavaScriptのコードです。
+        // Socket.IOサーバーへの接続を開始します。document.domainとlocation.portは現在のウェブページのドメインとポート番号を参照します。
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        
+        // サーバーから'message'イベントを受け取ったときの処理を定義します。受け取ったメッセージ（data）をHTMLのメッセージリストに追加します。
+        socket.on('message', function(data) {
+            $('#messages').append($('<li>').text(data));
+        });
+        
+        // 'send'ボタンがクリックされたときの処理を定義します。テキストボックスに入力されたメッセージをサーバーに送信し、テキストボックスをクリアします。
+        $('#send').click(function() {
+            socket.emit('message', $('#message').val());
+            $('#message').val('');
+            return false;
+        });
+    </script>
+</body>
+</html>

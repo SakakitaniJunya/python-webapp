@@ -1,44 +1,65 @@
-<!DOCTYPE html> <!-- HTML5を使用することを宣言します。-->
+<!DOCTYPE html>
 <html>
-<head>
-    <!-- Socket.IOのJavaScriptライブラリを読み込みます。これにより、ブラウザからサーバーへのリアルタイム通信が可能になります。 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-    <!-- jQueryのJavaScriptライブラリを読み込みます。これはHTMLの操作を簡単にするライブラリです。 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <!-- 別バージョンのjQueryとSocket.IOも読み込みます。どのバージョンが必要かによって読み込むファイルを選択します。 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
-</head>
-<body>
-    <!-- メッセージを表示するためのリストを作成します。 -->
-    <ul id="messages">
-        <!-- サーバーから受け取ったメッセージのリストを表示します。 -->
-        {% for message in messages %}
-            <!-- 各メッセージをリストの項目として表示します。 -->
-            <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    <!-- ユーザーがメッセージを入力するためのテキストボックスを作成します。 -->
-    <input id="message" type="text">
-    <!-- メッセージを送信するためのボタンを作成します。 -->
-    <button id="send">Send</button>
 
-    <script>
-        // ここからJavaScriptのコードです。
-        // Socket.IOサーバーへの接続を開始します。document.domainとlocation.portは現在のウェブページのドメインとポート番号を参照します。
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-        
-        // サーバーから'message'イベントを受け取ったときの処理を定義します。受け取ったメッセージ（data）をHTMLのメッセージリストに追加します。
-        socket.on('message', function(data) {
-            $('#messages').append($('<li>').text(data));
-        });
-        
-        // 'send'ボタンがクリックされたときの処理を定義します。テキストボックスに入力されたメッセージをサーバーに送信し、テキストボックスをクリアします。
-        $('#send').click(function() {
-            socket.emit('message', $('#message').val());
-            $('#message').val('');
-            return false;
-        });
-    </script>
+<head>
+    <title>Chat Py</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
+        integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+</head>
+
+<body class="flex justify-center items-center h-screen bg-gray-100">
+
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h1 class="text-2xl text-center mb-8 text-indigo-500 font-semibold">Chat Py</h1>
+        <form id="loginForm">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                    Email
+                </label>
+                <input id="email"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="text" placeholder="Email">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                    Password
+                </label>
+                <input id="password"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="password" placeholder="******************">
+            </div>
+            <div class="flex items-center justify-between">
+                <button id="loginButton"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button">
+                    Sign In
+                </button>
+            </div>
+        </form>
+    </div>
+
 </body>
+
+<script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    // When the login button is clicked, send the email and password to the server
+    $('#loginButton').click(function () {
+        var email = $('#email').val();
+        var password = $('#password').val();
+
+        socket.emit('login', { email: email, password: password });
+
+        // Clear the input fields
+        $('#email').val('');
+        $('#password').val('');
+
+        return false;
+    });
+</script>
+
 </html>
