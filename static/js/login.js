@@ -1,5 +1,4 @@
 $(document).ready(function () {
-  // When the submit button is clicked, check which radio button is selected and send the appropriate request to the server
   $("#submitAction").click(function () {
     var email = $("#email").val();
     var password = $("#password").val();
@@ -12,10 +11,12 @@ $(document).ready(function () {
       data: { email: email, password: password },
       success: function (response) {
         alert(response.message);
-        if (action == "login") {
-          windows.location.href = "/chat";
-        } else if (action == "registor") {
-          alert("Registor");
+        if (action === "login") {
+          // If login is successful, redirect to chat page
+          window.location.href = "/chat";
+        } else if (action === "register") {
+          // If registration is successful, show a success message and stay on the same page
+          alert("Registration successful! You can now log in.");
         }
       },
       error: function (error) {
@@ -30,4 +31,3 @@ $(document).ready(function () {
     return false;
   });
 });
-

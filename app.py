@@ -8,8 +8,8 @@ import secrets
 # flask_socketioは、Flaskと統合されたSocket.IOのライブラリで、
 # サーバとクライアント間のリアルタイム通信を可能にします。
 from flask_socketio import SocketIO, emit
-from components.login import auth
-from components.chat import chat
+from application.login import auth
+from application.chat import chat
 
 
 

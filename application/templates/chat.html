@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="../models/chat.js"></script>
+</head>
+
+<body class="bg-gray-200 h-screen">
+    <div class="container mx-auto h-full p-4">
+        <div id="message-container" class="overflow-y-auto mb-10 px-4 py-6" style="height: calc(100% - 3rem);">
+            <!-- Messages will be appended here dynamically -->
+        </div>
+
+        <div class="fixed bottom-0 left-0 right-0 py-2 bg-white">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="relative">
+                    <input id="message-input" type="text"
+                        class="form-control w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                        placeholder="Type your message here...">
+                    <button id="send-button"
+                        class="absolute inset-y-0 right-0 flex items-center px-4 font-bold text-white bg-indigo-500 rounded-r-lg focus:outline-none focus:shadow-outline hover:bg-indigo-600">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

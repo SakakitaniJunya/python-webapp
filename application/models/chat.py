@@ -23,7 +23,7 @@ def post_message():
 
 @chat.route('/chat', methods=['GET'])
 def chat_page():
-    return render_template('chatlist.html')
+    return render_template('chat.html')
 
 @chat.route('/get_messages', methods=['GET'])
 def get_messages():
@@ -41,5 +41,3 @@ def get_messages():
     allMessages = cur.fetchall()
 
     userMessageList = [dict(row) for row in userMessages]
-    allMessagesList = [dict(row) for row in allMessages]
-    return jsonify(userMessageList=userMessageList, allMessagesList=allMessagesList)
