@@ -29,13 +29,13 @@
 </body>
 <script>
 
-    function createMessageElement(user_id, message, timestamp, isCurrentUser) {
+    function createMessageElement(email, message, timestamp, isCurrentUser) {
         var alignment = isCurrentUser ? 'flex justify-end' : 'flex justify-start';
-        var bgColor = isCurrentUser ? 'bg-blue-100' : 'bg-white';
+        var bgColor = isCurrentUser ? 'bg-green-100' : 'bg-white';
 
         var messageElement = $('<div>').addClass(`border rounded-lg p-3 mb-2 ${alignment} ${bgColor}`).append(
             $('<div>').addClass('w-full').append(
-                $('<strong>').text(user_id ? user_id : 'Anonymous').addClass('block text-indigo-600'),
+                $('<strong>').text(email ? email : 'Anonymous').addClass('block text-indigo-600'),
                 $('<p>').text(message).addClass('mb-1'),
                 $('<span>').text(timestamp).addClass('text-xs text-gray-600')
             )
@@ -51,12 +51,12 @@
 
             var userMessages = data.userMessageList;
             var allMessages = data.allMessagesList;
-
             allMessages.forEach(function (message) {
                 var isCurrentUser = userMessages.some(function (userMessage) {
-                    return userMessage.message_id === message.message_id;
+                    return userMessage.MESSAGE_ID === message.MESSAGE_ID;
                 });
-                var messageElement = createMessageElement(message.user_id, message.message, message.created_at, isCurrentUser);
+
+                var messageElement = createMessageElement(message.EMAIL, message.MESSAGE, message.CREATE_AT, isCurrentUser);
                 $('#message-container').append(messageElement);
             });
         });

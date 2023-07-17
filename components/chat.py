@@ -30,9 +30,14 @@ def get_messages():
     user_id = session.get('user_id')
     con = get_db()
     cur = con.cursor()
-    cur.execute("SELECT * FROM MESSAGES WHERE USER_ID = ? ORDER BY CREATED_AT ASC", (user_id,))
+    cur.execute("SELECT USERS.EMAIL AS EMAIL,MESSAGES.MESSAGE AS MESSAGE, MESSAGES.CREATED_AT AS CREATED_AT, MESSAGES.USER_ID AS USER_ID , MESSAGES.MESSAGE_ID AS MESSAGE_ID  \
+                FROM MESSAGES LEFT JOIN USERS ON USERS.USER_ID=  MESSAGES.USER_ID  \
+                WHERE MESSAGES.USER_ID = ? ORDER BY MESSAGES.CREATED_AT ASC", (user_id,))
+
     userMessages = cur.fetchall()
-    cur.execute("SELECT * FROM MESSAGES ORDER BY CREATED_AT ASC")
+    cur.execute("SELECT USERS.EMAIL AS EMAIL ,MESSAGES.MESSAGE AS MESSAGE, MESSAGES.CREATED_AT AS CREATED_AT, MESSAGES.USER_ID AS USER_ID,MESSAGES.MESSAGE_ID AS MESSAGE_ID  \
+                FROM MESSAGES LEFT JOIN USERS ON USERS.USER_ID=  MESSAGES.USER_ID  \
+                ORDER BY MESSAGES.CREATED_AT ASC")
     allMessages = cur.fetchall()
 
     userMessageList = [dict(row) for row in userMessages]

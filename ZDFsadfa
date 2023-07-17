@@ -1,0 +1,35 @@
+[1mdiff --git a/__pycache__/database.cpython-310.pyc b/__pycache__/database.cpython-310.pyc[m
+[1mindex bde8682..b6da616 100644[m
+Binary files a/__pycache__/database.cpython-310.pyc and b/__pycache__/database.cpython-310.pyc differ
+[1mdiff --git a/components/__pycache__/chat.cpython-310.pyc b/components/__pycache__/chat.cpython-310.pyc[m
+[1mindex 8aee818..9a3da8b 100644[m
+Binary files a/components/__pycache__/chat.cpython-310.pyc and b/components/__pycache__/chat.cpython-310.pyc differ
+[1mdiff --git a/components/__pycache__/login.cpython-310.pyc b/components/__pycache__/login.cpython-310.pyc[m
+[1mindex 108f1c4..0038241 100644[m
+Binary files a/components/__pycache__/login.cpython-310.pyc and b/components/__pycache__/login.cpython-310.pyc differ
+[1mdiff --git a/components/chat.py b/components/chat.py[m
+[1mindex 1e56cd7..551eb55 100644[m
+[1m--- a/components/chat.py[m
+[1m+++ b/components/chat.py[m
+[36m@@ -35,6 +35,6 @@[m [mdef get_messages():[m
+     cur.execute("SELECT * FROM MESSAGES ORDER BY CREATED_AT ASC")[m
+     allMessages = cur.fetchall()[m
+ [m
+[31m-    userMessageList = [dict(row) for row in userMessages][m
+[32m+[m[32m    userMessageList = [dict(row) for row in userMessages]gi[m
+     allMessagesList = [dict(row) for row in allMessages][m
+     return jsonify(userMessageList=userMessageList, allMessagesList=allMessagesList)[m
+\ No newline at end of file[m
+[1mdiff --git a/templates/chatlist.html b/templates/chatlist.html[m
+[1mindex 6b17c56..34435f0 100644[m
+[1m--- a/templates/chatlist.html[m
+[1m+++ b/templates/chatlist.html[m
+[36m@@ -30,7 +30,7 @@[m
+ <script>[m
+ [m
+     function createMessageElement(user_id, message, timestamp, isCurrentUser) {[m
+[31m-        var alignment = isCurrentUser ? 'flex justify-end' : 'flex justify-start';[m
+[32m+[m[32m        var alignment = isCurrentUser ? 'justify-end' : 'justify-start';[m
+         var bgColor = isCurrentUser ? 'bg-blue-100' : 'bg-white';[m
+ [m
+         var messageElement = $('<div>').addClass(`border rounded-lg p-3 mb-2 ${alignment} ${bgColor}`).append([m
