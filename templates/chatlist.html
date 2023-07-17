@@ -35,7 +35,8 @@
 
         var messageElement = $('<div>').addClass(`border rounded-lg p-3 mb-2 ${alignment} ${bgColor}`).append(
             $('<div>').addClass('w-full').append(
-                $('<strong>').text(email ? email : 'Anonymous').addClass('block text-indigo-600'),
+                $('<img>').text(email ? email : 'None').addClass('block text-indigo-600'),
+                $('<strong>').text(email ? email : 'None').addClass('block text-indigo-600'),
                 $('<p>').text(message).addClass('mb-1'),
                 $('<span>').text(timestamp).addClass('text-xs text-gray-600')
             )

@@ -22,7 +22,7 @@ def login():
         session['user_name'] = user['name']
         response = {
             "status": "success",
-            "message": "Login Success" + email
+            "message": "Login Success: " + email
         }
         return jsonify(response), 200
     else:
@@ -41,7 +41,17 @@ def register():
 
     con = get_db()
     cur = con.cursor()
-    cur.execute("INSERT INTO USERS (EMAIL, PASSWORD) VALUES (? , ?)", (email, password))
-    con.commit()
+    cur.execute("SELECT * FROM USERS WHERE email = ? AND password = ?", (email, password))
+    user = cur.fetchone()
+    ## ユーザがすでに存在しているかどうかを確認
+    if user is not None:
+        response = {
+            "status": "failed",
+            "message": "already users: " + email
+        }
+        return jsonify(response), 401
+    else: 
+        cur.execute("INSERT INTO USERS (EMAIL, PASSWORD) VALUES (? , ?)", (email, password))
+        con.commit()
 
     return jsonify({"status": "success", "message": "Register Success"})
