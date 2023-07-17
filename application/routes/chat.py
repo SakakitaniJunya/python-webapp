@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, Blueprint, session, jsonify
 import datetime
 from database import get_db 
@@ -39,5 +40,6 @@ def get_messages():
                 FROM MESSAGES LEFT JOIN USERS ON USERS.USER_ID=  MESSAGES.USER_ID  \
                 ORDER BY MESSAGES.CREATED_AT ASC")
     allMessages = cur.fetchall()
-
     userMessageList = [dict(row) for row in userMessages]
+    allMessagesList = [dict(row) for row in allMessages]
+    return jsonify(userMessageList=userMessageList, allMessagesList=allMessagesList)

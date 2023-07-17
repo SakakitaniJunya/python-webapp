@@ -45,7 +45,13 @@ function getMessages() {
 }
 
 // Make sure to call getMessages when the page loads
-$(document).ready(getMessages);
+
+$(document).ready(function () {
+  getMessages(); // Call once immediately upon page load
+
+  // Then call every 5 seconds
+  setInterval(getMessages, 5000);
+});
 
 $(function () {
   $("#send-button").click(function () {
@@ -57,8 +63,7 @@ $(function () {
       type: "POST",
       contentType: "application/json", // Content-Type を 'application/json' に設定
       data: JSON.stringify({ message: message }), // JSON 文字列に変換
-      success: function (response) {
-      },
+      success: function (response) {},
       error: function (error) {
         alert(error.responseText || error.responseJSON.message);
       },
